@@ -1,0 +1,24 @@
+{
+  "name": "online-doctor-server",
+  "version": "0.0.0",
+  "description": "Server for online doctor APP",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "Nik Filatov",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^1.3.2",
+    "express": "^4.16.2",
+    "graphql": "^0.12.3",
+    "graphql-tools": "^2.19.0",
+    "nodemon": "^1.14.12"
+  },
+  "devDependencies": {
+    "eslint": "^4.17.0",
+    "eslint-config-google": "^0.9.1",
+    "eslint-plugin-import": "^2.8.0"
+  }
+}
