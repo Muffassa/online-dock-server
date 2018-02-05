@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon --exec babel-node index.js"
   },
   "author": "Nik Filatov",
   "license": "ISC",
@@ -14,9 +14,14 @@
     "express": "^4.16.2",
     "graphql": "^0.12.3",
     "graphql-tools": "^2.19.0",
-    "nodemon": "^1.14.12"
+    "nodemon": "^1.14.12",
+    "pg": "^7.4.1",
+    "sequelize": "^4.32.6"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-stage-3": "^6.24.1",
     "eslint": "^4.17.0",
     "eslint-config-google": "^0.9.1",
     "eslint-plugin-import": "^2.8.0"
