@@ -20,6 +20,6 @@ export default `
       speciality: String!,
       email: String!,
       password: String!
-    ): Doctor!
+    ): Boolean
   }
 `;

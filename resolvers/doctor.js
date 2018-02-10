@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export default {
   Query: {
     getDoctor: (parent, {id}, {models}) =>
@@ -5,6 +7,14 @@ export default {
     allDoctors: (parent, args, {models}) => models.Doctor.findAll(),
   },
   Mutation: {
-    createDoctor: (parent, args, {models}) => models.Doctor.create(args),
+    createDoctor: async (parent, {password, ...args}, {models}) => {
+      try {
+        const hashedPassword = await bcrypt.hash(password, 12);
+        await models.Doctor.create({...args, password: hashedPassword});
+        return true;
+      } catch (err) {
+        return false;
+      }
+    },
   },
 };
