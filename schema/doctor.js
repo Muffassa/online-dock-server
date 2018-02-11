@@ -8,6 +8,15 @@ export default `
     email: String!
     password: String!
   }
+  type Error {
+    message: String!
+  }
+  type LoginResponse {
+    ok: Boolean!
+    token: String
+    refreshToken: String
+    errors: [Error!]
+  }
   type Query {
     getDoctor(id: Int!): Doctor!
     allDoctors: [Doctor!]!
@@ -21,5 +30,6 @@ export default `
       email: String!,
       password: String!
     ): Boolean
+    login(email: String, password: String): LoginResponse!
   }
 `;

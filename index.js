@@ -7,6 +7,9 @@ import {fileLoader, mergeTypes, mergeResolvers} from 'merge-graphql-schemas';
 import models from './models';
 import cors from 'cors';
 
+const SECRET = 'asdnkljbnqwe423123xzc654wq';
+const SECRET2 = 'll;kwenzxc324mz,12asdmn,';
+
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
 
 const resolvers = mergeResolvers(
@@ -27,6 +30,8 @@ app.use(
     schema,
     context: {
       models,
+      SECRET,
+      SECRET2,
     },
   })
 );

@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import {tryLogin} from '../auth';
 
 export default {
   Query: {
@@ -16,5 +17,7 @@ export default {
         return false;
       }
     },
+    login: async (parent, {email, password}, {models, SECRET, SECRET2}) =>
+      tryLogin(email, password, models, SECRET),
   },
 };
