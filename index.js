@@ -6,6 +6,8 @@ import path from 'path';
 import {fileLoader, mergeTypes, mergeResolvers} from 'merge-graphql-schemas';
 import models from './models';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import {refreshTokens} from './auth';
 
 const SECRET = 'asdnkljbnqwe423123xzc654wq';
 const SECRET2 = 'll;kwenzxc324mz,12asdmn,';
@@ -22,7 +24,35 @@ const schema = makeExecutableSchema({
 });
 
 const app = express();
-app.use(cors('*'));
+app.use(cookieParser());
+app.use(cors({origin: 'http://localhost:3000', credentials: true}));
+
+app.use(async (req, res, next) => {
+  const {token, refreshToken} = req.cookies;
+
+  if (token) {
+    try {
+      const {user} = jwt.verify(token, SECRET);
+      req.user = user;
+    } catch (err) {
+      const newTokens = await refreshTokens(
+        token,
+        refreshToken,
+        models,
+        SECRET,
+        SECRET2
+      );
+      if (newTokens.token && newTokens.refreshToken) {
+        res.cookie('token', newTokens.token);
+        res.cookie('refreshToken', newTokens.refreshToken);
+      }
+      req.user = newTokens.user;
+    }
+  }
+
+  next();
+});
+
 app.use(
   '/graphql',
   bodyParser.json(),
