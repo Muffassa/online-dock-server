@@ -8,10 +8,15 @@ export default {
     allDoctors: (parent, args, {models}) => models.Doctor.findAll(),
   },
   Mutation: {
-    createDoctor: async (parent, {password, ...args}, {models}) => {
+    createDoctor: async (parent, {password, email, ...args}, {models}) => {
       try {
         const hashedPassword = await bcrypt.hash(password, 12);
-        await models.Doctor.create({...args, password: hashedPassword});
+        const {dataValues: {id}} = await models.Email.create({email});
+        await models.Doctor.create({
+          ...args,
+          password: hashedPassword,
+          emailId: id,
+        });
         return true;
       } catch (err) {
         return false;

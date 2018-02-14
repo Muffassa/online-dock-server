@@ -15,13 +15,20 @@ export default (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
       },
-      email: {
-        type: DataTypes.STRING,
-        unique: true,
-      },
       password: DataTypes.STRING,
     },
     {underscored: true}
   );
+
+  Doctor.associate = (models) => {
+    // 1:M
+    Doctor.belongsTo(models.Email, {
+      foreignKey: {
+        name: 'emailId',
+        field: 'email_id',
+      },
+    });
+  };
+
   return Doctor;
 };

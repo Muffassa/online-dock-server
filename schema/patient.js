@@ -2,7 +2,7 @@ export default `
   type Patient {
     id: Int!
     name: String!
-    email: String!
+    emailId: Int!
     password: String!
   }
   type Query {

@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt';
 export const createTokens = async (user, secret, secret2) => {
   const createToken = jwt.sign(
     {
-      user: _.pick(user, ['id']),
+      user: _.pick(user, ['id', 'emailId']),
     },
     secret,
     {
@@ -15,7 +15,7 @@ export const createTokens = async (user, secret, secret2) => {
 
   const createRefreshToken = jwt.sign(
     {
-      user: _.pick(user, 'id'),
+      user: _.pick(user, 'id', 'emailId'),
     },
     secret2,
     {
@@ -35,8 +35,8 @@ export const refreshTokens = async (
 ) => {
   let userId = 0;
   try {
-    const {user: {id}} = jwt.decode(refreshToken);
-    userId = id;
+    const {user: {emailId}} = jwt.decode(refreshToken);
+    userId = emailId;
   } catch (err) {
     return {};
   }
@@ -45,10 +45,18 @@ export const refreshTokens = async (
     return {};
   }
 
-  const user = await models.Doctor.findOne({
-    where: {id: userId},
+  // TODO: Аналогично с tryLogin либо БД поменять либо запрос переделать
+  const doctor = await models.Doctor.findOne({
+    where: {emailId: userId},
     raw: true,
   });
+
+  const patient = await models.Patient.findOne({
+    where: {emailId: userId},
+    raw: true,
+  });
+
+  const user = patient || doctor;
 
   if (!user) {
     return {};
@@ -75,7 +83,20 @@ export const refreshTokens = async (
 };
 
 export const tryLogin = async (email, password, models, SECRET, SECRET2) => {
-  const user = await models.Doctor.findOne({where: {email}, raw: true});
+  // TODO: Переделать либо БД как то по другому либо запрос
+  const emailData = await models.Email.findOne({where: {email}, raw: true});
+  const doctor = await models.Doctor.findOne({
+    where: {emailId: emailData.id},
+    raw: true,
+  });
+
+  const patient = await models.Patient.findOne({
+    where: {emailId: emailData.id},
+    raw: true,
+  });
+
+  // Тут всегда одно из значений будет пустое, т.к. email уникальны
+  const user = patient || doctor;
   if (!user) {
     // user with provided email not found
     return {
@@ -85,6 +106,9 @@ export const tryLogin = async (email, password, models, SECRET, SECRET2) => {
   }
 
   const valid = await bcrypt.compare(password, user.password);
+  console.log('VALID', valid);
+  console.log('USER', user);
+  console.log('Pssword', password);
   if (!valid) {
     // bad password
     return {
