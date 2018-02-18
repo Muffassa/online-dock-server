@@ -3,6 +3,12 @@ export default `
     id: Int!
     email: String!
     password: String!
+    role: Role!
+  }
+
+  enum Role {
+    doctor
+    patient
   }
   type Query {
     allUsers: [User!]!

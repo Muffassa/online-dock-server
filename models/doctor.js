@@ -4,7 +4,6 @@ export default (sequelize, DataTypes) => {
     {
       speciality: {
         type: DataTypes.STRING,
-        unique: true,
       },
     },
     {underscored: true}
