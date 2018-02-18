@@ -1,10 +1,13 @@
 module.exports = {
-  extends: "google",
+  extends: 'google',
   parserOptions: {
-    ecmaVersion: 6
+    ecmaVersion: 6,
   },
-  parser: "babel-eslint",
+  parser: 'babel-eslint',
   parserOptions: {
-    sourceType: "module"
-  }
+    sourceType: 'module',
+  },
+  rules: {
+    'new-cap': 0,
+  },
 };

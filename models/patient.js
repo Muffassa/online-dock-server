@@ -2,20 +2,19 @@ export default (sequelize, DataTypes) => {
   const Patient = sequelize.define(
     'patient',
     {
-      name: {
-        type: DataTypes.STRING,
+      age: {
+        type: DataTypes.INTEGER,
       },
-      password: DataTypes.STRING,
     },
     {underscored: true}
   );
 
   Patient.associate = (models) => {
     // 1:M
-    Patient.belongsTo(models.Email, {
+    Patient.belongsTo(models.User, {
       foreignKey: {
-        name: 'emailId',
-        field: 'email_id',
+        name: 'userId',
+        field: 'user_id',
       },
     });
   };

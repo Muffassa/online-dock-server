@@ -12,7 +12,7 @@ const models = {
   Doctor: sequelize.import('./doctor'),
   Patient: sequelize.import('./patient'),
   Message: sequelize.import('./message'),
-  Email: sequelize.import('./email'),
+  User: sequelize.import('./user'),
 };
 
 Object.keys(models).forEach((modelName) => {
