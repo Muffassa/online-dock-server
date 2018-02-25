@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import bcrypt from 'bcrypt';
+import winston from 'winston';
 
 export const createTokens = async (user, secret, secret2) => {
   const createToken = jwt.sign(
@@ -35,9 +36,10 @@ export const refreshTokens = async (
 ) => {
   let userId = null;
   try {
-    const {id} = jwt.decode(refreshToken);
+    const {user: {id}} = jwt.decode(refreshToken);
     userId = id;
   } catch (err) {
+    winston.error(err);
     return {};
   }
 

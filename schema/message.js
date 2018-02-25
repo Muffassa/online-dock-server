@@ -28,6 +28,11 @@ export default `
 
   type CreateMessageResponse {
     ok: Boolean,
+    id: Int
+    receiverId: Int
+    senderId: Int
+    text: String
+    created_at: String
     error: Error
   }
 `;

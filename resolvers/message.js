@@ -4,9 +4,14 @@ export default {
   Mutation: {
     createMessage: async (parent, args, {models, user}) => {
       try {
-        await models.Message.create({senderId: user.id, ...args});
+        const message = await models.Message.create({
+          senderId: user.id,
+          ...args,
+        });
+
         return {
           ok: true,
+          ...message.dataValues,
           error: null,
         };
       } catch (err) {
@@ -37,8 +42,14 @@ export default {
     dialog: (parent, {receiverId}, {models, user}) =>
       models.Message.findAll({
         where: {
-          receiverId: {[Op.or]: [user.id, receiverId]},
-          senderId: {[Op.or]: [user.id, receiverId]},
+          [Op.or]: [
+            {
+              [Op.and]: [{receiverId: user.id}, {senderId: receiverId}],
+            },
+            {
+              [Op.and]: [{receiverId}, {senderId: user.id}],
+            },
+          ],
         },
         order: [['created_at', 'ASC']],
       }),

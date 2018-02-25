@@ -6,7 +6,7 @@ export default `
   }
 
   type Mutation {
-    addPatient(email: String!, password: String!, age: Int! ): AddDoctorResponse!
+    addPatient(email: String!, password: String!, age: Int! ): AddPatientResponse!
   }
 
   type Query {
