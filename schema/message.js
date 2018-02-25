@@ -15,7 +15,7 @@ export default `
 
   type Query {
     allMessages: [Message!]!
-    dialog(doctorId: Int!, patientId: Int!): [MessageResponse]!
+    dialog(receiverId: Int!): [MessageResponse]!
   }
 
   type MessageResponse {

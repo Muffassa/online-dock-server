@@ -34,11 +34,11 @@ export default {
           },
         ],
       }),
-    dialog: (parent, {patientId, doctorId}, {models}) =>
+    dialog: (parent, {receiverId}, {models, user}) =>
       models.Message.findAll({
         where: {
-          receiverId: {[Op.or]: [patientId, doctorId]},
-          senderId: {[Op.or]: [patientId, doctorId]},
+          receiverId: {[Op.or]: [user.id, receiverId]},
+          senderId: {[Op.or]: [user.id, receiverId]},
         },
         order: [['created_at', 'ASC']],
       }),
