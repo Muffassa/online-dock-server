@@ -23,6 +23,7 @@ export default `
   }
 
   type LoginResponse {
+    ok: Boolean
     token: String
     refreshToken: String
     error: [Error]

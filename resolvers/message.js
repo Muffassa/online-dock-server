@@ -1,8 +1,10 @@
+import {Op} from 'sequelize';
+
 export default {
   Mutation: {
-    createMessage: async (parent, args, {models}) => {
+    createMessage: async (parent, args, {models, user}) => {
       try {
-        await models.Message.create(args);
+        await models.Message.create({senderId: user.id, ...args});
         return {
           ok: true,
           error: null,
@@ -31,6 +33,14 @@ export default {
             as: 'receiver',
           },
         ],
+      }),
+    dialog: (parent, {patientId, doctorId}, {models}) =>
+      models.Message.findAll({
+        where: {
+          receiverId: {[Op.or]: [patientId, doctorId]},
+          senderId: {[Op.or]: [patientId, doctorId]},
+        },
+        order: [['created_at', 'ASC']],
       }),
   },
 };

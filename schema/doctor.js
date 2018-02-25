@@ -6,7 +6,11 @@ export default `
   }
 
   type Mutation {
-    addDoctor(email: String!, password: String!, speciality: String! ): AddDoctorResponse!
+    addDoctor(
+        email: String!,
+        password: String!,
+        speciality: String!
+        ): AddDoctorResponse!
   }
 
   type Query {
@@ -14,6 +18,7 @@ export default `
   }
 
   type AddDoctorResponse {
+    ok: Boolean!
     data: Doctor
     error: Error
   }

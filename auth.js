@@ -49,7 +49,6 @@ export const refreshTokens = async (
     where: {id: userId},
     raw: true,
   });
-
   if (!user) {
     return {};
   }

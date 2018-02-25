@@ -7,26 +7,37 @@ export default {
       {speciality, password, ...userData},
       {models}
     ) => {
-      const hashedPassword = await bcrypt.hash(password, 12);
-      return {
-        data: await models.Doctor.create(
-          {
-            speciality,
-            user: {...userData, password: hashedPassword, role: 'doctor'},
+      try {
+        const hashedPassword = await bcrypt.hash(password, 12);
+        return {
+          ok: true,
+          data: await models.Doctor.create(
+            {
+              speciality,
+              user: {...userData, password: hashedPassword, role: 'doctor'},
+            },
+            {
+              include: [
+                {
+                  model: models.User,
+                  as: 'user',
+                },
+              ],
+            }
+          ),
+          error: {
+            message: '',
           },
-          {
-            include: [
-              {
-                model: models.User,
-                as: 'user',
-              },
-            ],
-          }
-        ),
-        error: {
-          message: '',
-        },
-      };
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          data: {},
+          error: {
+            message: err,
+          },
+        };
+      }
     },
   },
   Query: {

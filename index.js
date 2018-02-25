@@ -8,6 +8,8 @@ import models from './models';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import {refreshTokens} from './auth';
+import jwt from 'jsonwebtoken';
+import winston from 'winston';
 
 const SECRET = 'asdnkljbnqwe423123xzc654wq';
 const SECRET2 = 'll;kwenzxc324mz,12asdmn,';
@@ -30,11 +32,13 @@ app.use(cors({origin: 'http://localhost:3000', credentials: true}));
 app.use(async (req, res, next) => {
   const {token, refreshToken} = req.cookies;
 
+  winston.info('User token', token);
   if (token) {
     try {
       const {user} = jwt.verify(token, SECRET);
       req.user = user;
     } catch (err) {
+      winston.error(err);
       const newTokens = await refreshTokens(
         token,
         refreshToken,
@@ -49,21 +53,21 @@ app.use(async (req, res, next) => {
       req.user = newTokens.user;
     }
   }
-
   next();
 });
 
 app.use(
   '/graphql',
   bodyParser.json(),
-  graphqlExpress({
+  graphqlExpress((req) => ({
     schema,
     context: {
       models,
       SECRET,
       SECRET2,
+      user: req.user,
     },
-  })
+  }))
 );
 
 app.use('/graphiql', graphiqlExpress({endpointURL: '/graphql'}));

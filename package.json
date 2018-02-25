@@ -21,7 +21,8 @@
     "merge-graphql-schemas": "^1.4.0",
     "nodemon": "^1.14.12",
     "pg": "^7.4.1",
-    "sequelize": "^4.32.6"
+    "sequelize": "^4.32.6",
+    "winston": "^2.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
