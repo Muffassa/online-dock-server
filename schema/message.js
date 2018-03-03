@@ -18,6 +18,10 @@ export default `
     dialog(receiverId: Int!): [MessageResponse]!
   }
 
+  type Subscription {
+    newMessage(receiverId: Int!, senderId: Int!): MessageResponse!
+  }
+
   type MessageResponse {
     id: Int!
     receiverId: Int!

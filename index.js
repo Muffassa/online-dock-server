@@ -70,6 +70,7 @@ app.use(
       SECRET2,
       user: req.user,
     },
+    subscriptionsEndpoint: `ws://localhost:8081/subscriptions`,
   }))
 );
 
@@ -77,19 +78,24 @@ app.use(
   '/graphiql',
   graphiqlExpress({
     endpointURL: '/graphql',
-    subscriptionsEndpoint: `ws://localhost:8081/subscriptions`,
   })
 );
 
 const server = createServer(app);
 models.sequelize.sync().then(() => {
-  server.listen(8081, () => {
+  server.listen(8081, (req) => {
     console.log(`Apollo Server is now running on http://localhost:8081`);
     new SubscriptionServer(
       {
         execute,
         subscribe,
         schema,
+        onConnect: (connectionParams, webSocket) => {
+          console.log('REQUEST', req);
+          return {
+            user: 2,
+          };
+        },
       },
       {
         server: server,
