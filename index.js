@@ -10,6 +10,9 @@ import cookieParser from 'cookie-parser';
 import {refreshTokens} from './auth';
 import jwt from 'jsonwebtoken';
 import winston from 'winston';
+import {execute, subscribe} from 'graphql';
+import {createServer} from 'http';
+import {SubscriptionServer} from 'subscriptions-transport-ws';
 
 const SECRET = 'asdnkljbnqwe423123xzc654wq';
 const SECRET2 = 'll;kwenzxc324mz,12asdmn,';
@@ -70,8 +73,28 @@ app.use(
   }))
 );
 
-app.use('/graphiql', graphiqlExpress({endpointURL: '/graphql'}));
+app.use(
+  '/graphiql',
+  graphiqlExpress({
+    endpointURL: '/graphql',
+    subscriptionsEndpoint: `ws://localhost:8081/subscriptions`,
+  })
+);
 
+const server = createServer(app);
 models.sequelize.sync().then(() => {
-  app.listen(8081);
+  server.listen(8081, () => {
+    console.log(`Apollo Server is now running on http://localhost:8081`);
+    new SubscriptionServer(
+      {
+        execute,
+        subscribe,
+        schema,
+      },
+      {
+        server: server,
+        path: '/subscriptions',
+      }
+    );
+  });
 });
