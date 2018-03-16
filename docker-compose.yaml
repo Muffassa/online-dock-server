@@ -1,0 +1,21 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    networks:
+      - webnet
+    environment:
+      POSTGRES_PASSWORD: doctor
+      POSTGRES_USER: doctor
+      POSTGRES_DB: doctor
+  web:
+    image: diploma-server
+    ports:
+      - "8081:8081"
+    networks:
+      - webnet
+    environment:
+      DB_HOST: db
+    command: ["./wait-for-it.sh", "db:5432", "--", "node", "index.js"]
+networks:
+  webnet:

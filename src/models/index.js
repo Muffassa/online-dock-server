@@ -1,8 +1,10 @@
 import Sequelize from 'sequelize';
 
+console.log(process.env.DB_HOST);
 const sequelize = new Sequelize('doctor', 'doctor', 'doctor', {
   dialect: 'postgres',
   operatorsAliases: Sequelize.Op,
+  host: process.env.DB_HOST || '221',
   define: {
     underscored: true,
   },
